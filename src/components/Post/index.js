@@ -9,7 +9,7 @@ import {
   IconButton,
   Typography,
 } from "@material-ui/core";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+import DeleteIcon from "@material-ui/icons/Delete";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import moment from "moment";
 import useStyles from "./styles";
@@ -20,7 +20,16 @@ export default function Post({ post }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const onLike = React.useCallback(() => {
-    dispatch(actions.updatePost.updatePostRequest({...post, likeCount: (post.likeCount + 1) }));
+    dispatch(
+      actions.updatePost.updatePostRequest({
+        ...post,
+        likeCount: post.likeCount + 1,
+      })
+    );
+  }, [post, dispatch]);
+
+  const onDelete = React.useCallback(() => {
+    dispatch(actions.deletePost.deletePostRequest(post._id));
   }, [post, dispatch]);
 
   return (
@@ -28,14 +37,18 @@ export default function Post({ post }) {
       <CardHeader
         avatar={<Avatar>A</Avatar>}
         title={post.title}
-        subheader={moment(post.updatedAt).format("HH:MM MM DD,YYYY")}
+        subheader={moment(post.updatedAt).format("DD/MM/YYYY HH:MM")}
         action={
-          <IconButton>
-            <MoreVertIcon />
+          <IconButton onClick={onDelete}>
+            <DeleteIcon />
           </IconButton>
         }
       ></CardHeader>
-      <CardMedia image={post.attachment} className={classes.media} title="Title"></CardMedia>
+      <CardMedia
+        image={post.attachment}
+        className={classes.media}
+        title="Title"
+      ></CardMedia>
       <CardContent>
         <Typography variant="h5" color="textPrimary">
           {post.title}

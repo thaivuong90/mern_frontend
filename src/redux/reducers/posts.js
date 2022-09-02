@@ -1,5 +1,5 @@
 import { INIT_STATE } from "../../constants";
-import { getPosts, getType, createPost, updatePost } from "../actions";
+import { getPosts, getType, createPost, updatePost, deletePost } from "../actions";
 
 export default function postReducer(state = INIT_STATE.posts, action) {
   switch (action.type) {
@@ -51,6 +51,27 @@ export default function postReducer(state = INIT_STATE.posts, action) {
         data: [...state.data],
       };
     case getType(updatePost.updatePostFailure):
+      return {
+        ...state,
+        isLoading: false,
+      };
+    case getType(deletePost.deletePostRequest):
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case getType(deletePost.deletePostSuccess):
+      const deleteIndex = state.data.findIndex(
+        (item) => item._id === action.payload
+      );
+      console.log(deleteIndex);
+      state.data.splice(deleteIndex, 1);
+      return {
+        ...state,
+        isLoading: false,
+        data: [...state.data],
+      };
+    case getType(deletePost.deletePostFailure):
       return {
         ...state,
         isLoading: false,
